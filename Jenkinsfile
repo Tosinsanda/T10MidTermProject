@@ -7,13 +7,6 @@ pipeline {
         DB_DIR = 'db'
     }
 
-    stages {
-        stage('Clone Repo') {
-            steps {
-                git 'https://github.com/Tosinsanda/T10MidTermProject.git'
-            }
-        }
-
         stage('Install Flask Dependencies') {
             steps {
                 dir("${FLASK_DIR}") {
