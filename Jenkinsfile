@@ -3,10 +3,10 @@ pipeline {
 
     environment {
         FLASK_DIR = 'flask_app'
-        NODE_DIR = 'node_app'
-        DB_DIR = 'db'
+        NODE_DIR  = 'node_app'
     }
 
+    stages {
         stage('Install Flask Dependencies') {
             steps {
                 dir("${FLASK_DIR}") {
