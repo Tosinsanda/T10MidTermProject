@@ -1,0 +1,12 @@
+---
+- name: Deploy Dual Applications with Shared PostgreSQL
+  hosts: app_servers
+  become: yes
+  vars:
+    db_name: shared_app_db
+    db_user: app_user
+    db_password: secure_password
+    app_dir: /opt/apps
+    flask_port: 5000
+    node_port: 3000
+...
