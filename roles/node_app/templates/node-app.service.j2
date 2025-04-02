@@ -1,0 +1,10 @@
+[Unit]
+Description=Node.js Application
+After=network.target postgresql.service
+[Service]
+User=ec2-user
+WorkingDirectory={{ app_dir }}/node_app
+ExecStart=/usr/bin/node app.js
+Restart=always
+[Install]
+WantedBy=multi-user.target

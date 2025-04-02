@@ -1,0 +1,9 @@
+---
+- name: Setup Flask Application
+  hosts: flask_servers
+  become: yes
+  vars:
+    app_dir: "/home/ec2-user"
+  roles:
+    - flask_app
+...

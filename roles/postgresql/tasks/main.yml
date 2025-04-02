@@ -1,0 +1,47 @@
+---
+- name: Install required packages
+  apt:
+    name:
+      - postgresql-server
+      - postgresql-contrib
+      - python3-psycopg2
+    state: present
+- name: Check if PostgreSQL is initialized
+  stat:
+    path: /var/lib/pgsql/data/postgresql.conf
+  register: postgresql_conf
+- name: Initialize PostgreSQL database
+  command: postgresql-setup initdb
+  when: not postgresql_conf.stat.exists
+- name: Start and enable PostgreSQL
+  systemd:
+    name: postgresql
+    state: started
+    enabled: yes
+- name: Configure PostgreSQL to allow remote connections
+  lineinfile:
+    path: /var/lib/pgsql/data/postgresql.conf
+    regexp: '^#listen_addresses'
+    line: "listen_addresses = '*'"
+  notify: restart postgresql
+- name: Configure PostgreSQL client authentication
+  lineinfile:
+    path: /var/lib/pgsql/data/pg_hba.conf
+    line: "host all all 0.0.0.0/0 md5"
+  notify: restart postgresql
+- name: Create database user
+  become: yes
+  become_user: postgres
+  postgresql_user:
+    name: "{{ db_user }}"
+    password: "{{ db_password }}"
+    state: present
+    role_attr_flags: CREATEDB,LOGIN
+- name: Create application database
+  become: yes
+  become_user: postgres
+  postgresql_db:
+    name: "{{ db_name }}"
+    owner: "{{ db_user }}"
+    state: present
+...

@@ -1,0 +1,6 @@
+---
+- name: restart flask app
+  systemd:
+    name: flask-app
+    state: restarted
+...

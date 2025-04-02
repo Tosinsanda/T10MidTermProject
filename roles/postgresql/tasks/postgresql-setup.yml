@@ -1,0 +1,7 @@
+---
+- name: Setup PostgreSQL using Ansible Role
+  hosts: CentOS
+  become: yes
+  roles:
+    - postgresql
+...

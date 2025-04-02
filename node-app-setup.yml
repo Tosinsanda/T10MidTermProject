@@ -1,0 +1,9 @@
+---
+- name: Setup Node.js Application
+  hosts: node_servers
+  become: yes
+  vars:
+    app_dir: "/home/ec2-user"
+  roles:
+    - node_app
+...

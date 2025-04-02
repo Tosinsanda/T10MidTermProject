@@ -1,0 +1,54 @@
+---
+- name: Install Python development packages
+  apt:
+    name:
+      - python3-devel
+      - gcc
+      - git
+    state: present
+- name: Create application directory
+  file:
+    path: "{{ app_dir }}/flask_app"
+    state: directory
+    owner: ec2-user
+    group: ec2-user
+    mode: '0755'
+- name: Clone Flask application repository
+  git:
+    repo: https://github.com/your-repo/flask-app.git
+    dest: "{{ app_dir }}/flask_app"
+    version: main
+  become: yes
+  become_user: ec2-user
+  # Replace with your actual repository
+- name: Create Python virtual environment
+  command: python3 -m venv "{{ app_dir }}/flask_app/venv"
+  args:
+    creates: "{{ app_dir }}/flask_app/venv"
+  become: yes
+  become_user: ec2-user
+- name: Install Flask application dependencies
+  pip:
+    requirements: "{{ app_dir }}/flask_app/requirements.txt"
+    virtualenv: "{{ app_dir }}/flask_app/venv"
+  become: yes
+  become_user: ec2-user
+- name: Set database connection string in Flask app
+  lineinfile:
+    path: "{{ app_dir }}/flask_app/app.py"
+    regexp: '^DATABASE_URL'
+    line: "DATABASE_URL = 'postgresql://{{ db_user }}:{{ db_password }}@localhost:5432/{{ db_name }}'"
+  become: yes
+  become_user: ec2-user
+- name: Create Flask app service
+  template:
+    src: flask-app.service.j2
+    dest: /etc/systemd/system/flask-app.service
+  notify: restart flask app
+- name: Enable and start Flask app service
+  systemd:
+    name: flask-app
+    state: started
+    enabled: yes
+    daemon_reload: yes
+...
