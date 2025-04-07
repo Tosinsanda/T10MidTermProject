@@ -1,12 +1,37 @@
 <!DOCTYPE html>
-<html>
-<head><title>Flask Shared DB</title></head>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Flask App with Shared DB</title>
+
+  <style>
+    body {
+      background-color: #f0f8ff;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding-top: 50px;
+    }
+
+    h1 { color: #333; margin-bottom: 0.3em; }
+    h2 { color: #444; margin-top: 0; font-weight: normal; }
+    p  { color: #666; }
+  </style>
+</head>
+
 <body>
-<h1>Flask app with shared DB is live!</h1>
-<ul>
-{% for item in data %}
-  <li>{{ item }}</li>
-{% endfor %}
-</ul>
+  <!-- main status message -->
+  <h1>Flask app with shared DB is live!</h1>
+
+  <!-- team credits + welcome -->
+  <h2>This was done by Tosin, Kome, Babajide 🚀</h2>
+  <p>Welcome to the Flask App!</p>
+
+  <!-- dynamic list from Jinja -->
+  <ul>
+    {% for item in data %}
+      <li>{{ item }}</li>
+    {% endfor %}
+  </ul>
 </body>
 </html>
+
