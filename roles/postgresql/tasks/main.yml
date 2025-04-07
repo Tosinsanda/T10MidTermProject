@@ -1,6 +1,6 @@
 ---
 - name: Install required packages
-  apt:
+  package:  yum
     name:
       - postgresql-server
       - postgresql-contrib
@@ -10,25 +10,31 @@
   stat:
     path: /var/lib/pgsql/data/postgresql.conf
   register: postgresql_conf
+
 - name: Initialize PostgreSQL database
-  command: postgresql-setup initdb
+  command: postgresql-setup --initdb
   when: not postgresql_conf.stat.exists
+
 - name: Start and enable PostgreSQL
   systemd:
     name: postgresql
     state: started
     enabled: yes
+
 - name: Configure PostgreSQL to allow remote connections
   lineinfile:
     path: /var/lib/pgsql/data/postgresql.conf
     regexp: '^#listen_addresses'
     line: "listen_addresses = '*'"
   notify: restart postgresql
+
 - name: Configure PostgreSQL client authentication
   lineinfile:
     path: /var/lib/pgsql/data/pg_hba.conf
+    insertafter: "EOF"  # Added to ensure it's added at the end
     line: "host all all 0.0.0.0/0 md5"
   notify: restart postgresql
+
 - name: Create database user
   become: yes
   become_user: postgres
@@ -37,11 +43,21 @@
     password: "{{ db_password }}"
     state: present
     role_attr_flags: CREATEDB,LOGIN
+
 - name: Create application database
   become: yes
   become_user: postgres
   postgresql_db:
     name: "{{ db_name }}"
-    owner: "{{ db_user }}"
+    owner: "{{ db_user }}"    
     state: present
-...
+
+  handlers:
+  - name: restart postgresql
+    systemd:
+      name: postgresql
+      state: restarted
+  - name: restart postgresql
+    systemd:
+      name: postgresql
+      state: restarted
