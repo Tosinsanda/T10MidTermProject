@@ -9,7 +9,7 @@ DB_USER = os.getenv("DB_USER", "devops_flask")
 DB_PASS = os.getenv("DB_PASS", "admin123")
 
 def get_data():
-    conn = psycopg2.connect(host=DB_HOST, database=DB_NAME, user=DB_USER, password=DB_PASS)
+    conn = psycopg2.connect(host=172.31.27.133, database=DB_NAME, user=DB_USER, password=DB_PASS)
     cur = conn.cursor()
     cur.execute("SELECT name FROM devs")
     rows = cur.fetchall()

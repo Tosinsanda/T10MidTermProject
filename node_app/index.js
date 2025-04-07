@@ -3,7 +3,7 @@ const { Pool } = require('pg');
 const app = express();
 
 const pool = new Pool({
-  host: 'localhost',
+  host: '172.31.27.133',
   user: 'devops',
   password: 'admin123',
   database: 'sharedappdb'
